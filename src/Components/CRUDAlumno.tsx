@@ -263,7 +263,7 @@ function CRUDAlumno() {
                         </label>
                     <InputText id="nombre" value={alumno.nombre} onChange={(e) => onInputChange(e,1)} required autoFocus
                            className={classNames({'p-invalid': submitted && !alumno.nombre})}/>
-                    {submitted && !alumno.nombre && <small className="p-error">El nombre es requerido</small>}
+                    {submitted && !alumno.nombre && <small className="p-error">El nombre es requeridoo</small>}
                 </div>
 
             </Dialog>
