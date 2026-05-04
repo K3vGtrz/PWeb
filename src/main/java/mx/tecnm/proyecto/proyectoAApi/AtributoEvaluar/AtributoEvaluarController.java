@@ -28,9 +28,9 @@ public class AtributoEvaluarController {
         return ResponseEntity.ok(atributoEvaluarRepository.findAll());
     }
 
-    @GetMapping("/{idAEvaluar}")
-    public ResponseEntity<AtributoEvaluar> findById(@PathVariable Long idAEvaluar) {
-        Optional<AtributoEvaluar> aEvaluarOptional = atributoEvaluarRepository.findById(idAEvaluar);
+    @GetMapping("/{idAevaluar}")
+    public ResponseEntity<AtributoEvaluar> findById(@PathVariable Long idAevaluar) {
+        Optional<AtributoEvaluar> aEvaluarOptional = atributoEvaluarRepository.findById(idAevaluar);
         if (aEvaluarOptional.isPresent()) {
             return ResponseEntity.ok(aEvaluarOptional.get());
         } else {
@@ -50,35 +50,35 @@ public class AtributoEvaluarController {
         newAtributoE.setEvaluacion(evaluacionOptional.get());
         AtributoEvaluar savedAtributoE = atributoEvaluarRepository.save(newAtributoE);
         URI uri = ucb
-                .path("/atributoEvaluar/{idAEvaluar}")
-                .buildAndExpand(savedAtributoE.getIdAEvaluar())
+                .path("/atributoEvaluar/{idAevaluar}")
+                .buildAndExpand(savedAtributoE.getIdAevaluar())
                 .toUri();
         return ResponseEntity.created(uri).body(savedAtributoE);
     }
 
-    @PutMapping("/{idAEvaluar}")
-    public ResponseEntity<Void> update(@PathVariable Long idAEvaluar, @RequestBody AtributoEvaluar atributoEAct){
+    @PutMapping("/{idAevaluar}")
+    public ResponseEntity<Void> update(@PathVariable Long idAevaluar, @RequestBody AtributoEvaluar atributoEAct){
         Optional<AtributoEgreso> egresoOptional = atributoEgresoRepository.findById(atributoEAct.getAtributoEgreso().getIdAtributo());
         Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(atributoEAct.getEvaluacion().getIdEvaluacion());
 
         if(!egresoOptional.isPresent() || !evaluacionOptional.isPresent()){
             return ResponseEntity.unprocessableEntity().build();
         }
-        AtributoEvaluar atributoEAnt = atributoEvaluarRepository.findById(idAEvaluar).get();
+        AtributoEvaluar atributoEAnt = atributoEvaluarRepository.findById(idAevaluar).get();
         if(atributoEAnt != null){
             atributoEAct.setAtributoEgreso(egresoOptional.get());
             atributoEAct.setEvaluacion(evaluacionOptional.get());
-            atributoEAct.setIdAEvaluar(idAEvaluar);
+            atributoEAct.setIdAevaluar(idAevaluar);
             atributoEvaluarRepository.save(atributoEAct);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{idAEvaluar}")
-    public ResponseEntity<Void> delete(@PathVariable Long idAEvaluar){
-        if(atributoEvaluarRepository.findById(idAEvaluar).get() != null){
-            atributoEvaluarRepository.deleteById(idAEvaluar);
+    @DeleteMapping("/{idAevaluar}")
+    public ResponseEntity<Void> delete(@PathVariable Long idAevaluar){
+        if(atributoEvaluarRepository.findById(idAevaluar).get() != null){
+            atributoEvaluarRepository.deleteById(idAevaluar);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

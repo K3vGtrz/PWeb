@@ -15,7 +15,7 @@ import mx.tecnm.proyecto.proyectoAApi.Evaluacion.Evaluacion;
 public class AtributoEvaluar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAEvaluar;
+    private Long idAevaluar;
     @Column(nullable = false,  length = 90)
     private String atributoAplicable;
 
