@@ -61,6 +61,7 @@ public class EvaluacionController {
         }
         return ResponseEntity.notFound().build();
     }
+
     @DeleteMapping("/{idEvaluacion}")
     public ResponseEntity<Void> delete(@PathVariable Long idEvaluacion) {
         if (evaluacionRepository.findById(idEvaluacion).isPresent()) {
@@ -68,5 +69,10 @@ public class EvaluacionController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/evaluacionConsulta")
+    public ResponseEntity<Iterable<QueryEvaluacion>> findEvaluacion(){
+        return ResponseEntity.ok(evaluacionRepository.findEvaluacion());
     }
 }

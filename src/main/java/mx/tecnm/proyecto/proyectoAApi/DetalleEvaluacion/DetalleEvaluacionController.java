@@ -83,4 +83,9 @@ public class DetalleEvaluacionController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/detalleEConsulta")
+    public ResponseEntity<Iterable<QueryDetalleEvaluacion>> findDetalleEvaluacion(){
+        return ResponseEntity.ok(detalleEvaluacionRepository.findDetalleEvaluacion());
+    }
 }

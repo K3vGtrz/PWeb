@@ -83,4 +83,9 @@ public class AtributoEvaluarController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/atrEvaluarConsulta")
+    public ResponseEntity<Iterable<QueryAtributoEvaluar>> findAtrEvaluar(){
+        return ResponseEntity.ok(atributoEvaluarRepository.findAtrEvaluar());
+    }
 }
