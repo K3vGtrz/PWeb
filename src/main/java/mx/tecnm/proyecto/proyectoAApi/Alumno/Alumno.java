@@ -1,7 +1,5 @@
 package mx.tecnm.proyecto.proyectoAApi.Alumno;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import mx.tecnm.proyecto.proyectoAApi.DetalleEvaluacion.DetalleEvaluacion;
@@ -15,9 +13,10 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "alumno")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Alumno {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idAlumno;
     @Column(nullable = false, length = 8)
     private String numControl;
     @Column(nullable = false, length = 60)
@@ -28,6 +27,5 @@ public class Alumno {
     private Character grupo;
 
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<DetalleEvaluacion> detalleEvaluacion;
+    private List<DetalleEvaluacion> detalleEvaluacion = new ArrayList<>();
 }

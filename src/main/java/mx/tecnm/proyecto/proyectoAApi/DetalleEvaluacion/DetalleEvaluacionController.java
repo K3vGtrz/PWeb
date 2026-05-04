@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@CrossOrigin(origins="http://localhost:5173")
 @RestController
 @RequestMapping("detalleEvaluacion")
 public class DetalleEvaluacionController {
@@ -28,9 +29,9 @@ public class DetalleEvaluacionController {
         return ResponseEntity.ok(detalleEvaluacionRepository.findAll());
     }
 
-    @GetMapping("/{id_DetalleEvaluacion}")
-    public ResponseEntity<DetalleEvaluacion> findById(@PathVariable Long id_DetalleEvaluacion) {
-        Optional<DetalleEvaluacion> detalleOptional = detalleEvaluacionRepository.findById(id_DetalleEvaluacion);
+    @GetMapping("/{idDetalleE}")
+    public ResponseEntity<DetalleEvaluacion> findById(@PathVariable Long idDetalleE) {
+        Optional<DetalleEvaluacion> detalleOptional = detalleEvaluacionRepository.findById(idDetalleE);
         if (detalleOptional.isPresent()) {
             return ResponseEntity.ok(detalleOptional.get());
         } else {
@@ -40,8 +41,8 @@ public class DetalleEvaluacionController {
 
     @PostMapping
     public ResponseEntity<DetalleEvaluacion> create(@RequestBody DetalleEvaluacion newDetalle, UriComponentsBuilder ucb) {
-        Optional<Alumno> alumnoOptional = alumnoRepository.findById(newDetalle.getAlumno().getNumControl());
-        Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(newDetalle.getEvaluacion().getId_Evaluacion());
+        Optional<Alumno> alumnoOptional = alumnoRepository.findById(newDetalle.getAlumno().getIdAlumno());
+        Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(newDetalle.getEvaluacion().getIdEvaluacion());
         if (!alumnoOptional.isPresent() || !evaluacionOptional.isPresent()) {
             return ResponseEntity.unprocessableEntity().build();
         }
@@ -49,41 +50,37 @@ public class DetalleEvaluacionController {
         newDetalle.setEvaluacion(evaluacionOptional.get());
         DetalleEvaluacion savedDetalle = detalleEvaluacionRepository.save(newDetalle);
         URI uri = ucb
-                .path("/detalleEvaluacion/{id_DetalleEvaluacion}")
-                .buildAndExpand(savedDetalle.getId_DetalleEvaluacion())
+                .path("/detalleEvaluacion/{idDetalleE}")
+                .buildAndExpand(savedDetalle.getIdDetalleE())
                 .toUri();
 
         return ResponseEntity.created(uri).body(savedDetalle);
     }
 
-    @PutMapping("/{id_DetalleEvaluacion}")
-    public ResponseEntity<Void> update(@PathVariable Long id_DetalleEvaluacion, @RequestBody DetalleEvaluacion detalle){
-        Optional<Alumno> alumnoOptional = alumnoRepository.findById(detalle.getAlumno().getNumControl());
-        Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(detalle.getEvaluacion().getId_Evaluacion());
+    @PutMapping("/{idDetalleE}")
+    public ResponseEntity<Void> update(@PathVariable Long idDetalleE, @RequestBody DetalleEvaluacion detalle){
+        Optional<Alumno> alumnoOptional = alumnoRepository.findById(detalle.getAlumno().getIdAlumno());
+        Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(detalle.getEvaluacion().getIdEvaluacion());
         if(!alumnoOptional.isPresent()) {
             return ResponseEntity.unprocessableEntity().build();
         }
-        DetalleEvaluacion detalleAnterior = detalleEvaluacionRepository.findById(id_DetalleEvaluacion).get();
+        DetalleEvaluacion detalleAnterior = detalleEvaluacionRepository.findById(idDetalleE).get();
         if(detalleAnterior != null) {
             detalle.setEvaluacion(evaluacionOptional.get());
             detalle.setAlumno(alumnoOptional.get());
-            detalle.setId_DetalleEvaluacion(detalleAnterior.getId_DetalleEvaluacion());
+            detalle.setIdDetalleE(detalleAnterior.getIdDetalleE());
             detalleEvaluacionRepository.save(detalle);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id_DetalleEvaluacion}")
-    public ResponseEntity<Void> delete(@PathVariable Long id_DetalleEvaluacion) {
-        if (detalleEvaluacionRepository.findById(id_DetalleEvaluacion) != null) {
-            detalleEvaluacionRepository.deleteById(id_DetalleEvaluacion);
+    @DeleteMapping("/{idDetalleE}")
+    public ResponseEntity<Void> delete(@PathVariable Long idDetalleE) {
+        if (detalleEvaluacionRepository.findById(idDetalleE) != null) {
+            detalleEvaluacionRepository.deleteById(idDetalleE);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
-    }
-    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
-    public ResponseEntity<String> handleJsonErrors(Exception e) {
-        return ResponseEntity.badRequest().body("Error en el formato JSON: " + e.getMessage());
     }
 }

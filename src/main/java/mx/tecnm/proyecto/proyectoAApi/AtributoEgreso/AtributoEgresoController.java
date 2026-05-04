@@ -8,6 +8,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@CrossOrigin(origins="http://localhost:5173")
 @RestController
 @RequestMapping("/atributoEgreso")
 public class AtributoEgresoController {
@@ -19,9 +20,9 @@ public class AtributoEgresoController {
         return ResponseEntity.ok(atributoEgresoRepository.findAll());
     }
 
-    @GetMapping("/{id_Atributo}")
-    public ResponseEntity<AtributoEgreso> findById(@PathVariable Long id_Atributo) {
-        Optional<AtributoEgreso> atributoOptional = atributoEgresoRepository.findById(id_Atributo);
+    @GetMapping("/{idAtributo}")
+    public ResponseEntity<AtributoEgreso> findById(@PathVariable Long idAtributo) {
+        Optional<AtributoEgreso> atributoOptional = atributoEgresoRepository.findById(idAtributo);
         if (atributoOptional.isPresent()) {
             return ResponseEntity.ok(atributoOptional.get());
         } else {
@@ -33,24 +34,24 @@ public class AtributoEgresoController {
     public ResponseEntity<Void> create(@RequestBody AtributoEgreso newAtributo, UriComponentsBuilder ucb){
         AtributoEgreso savedAtributo = atributoEgresoRepository.save(newAtributo);
         URI uri = ucb
-                .path("/atributoEgreso/{id_Atributo}")
-                .buildAndExpand(savedAtributo.getId_Atributo())
+                .path("/atributoEgreso/{idAtributo}")
+                .buildAndExpand(savedAtributo.getIdAtributo())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping("/{id_Atributo}")
+    @PutMapping("/{idAtributo}")
     public ResponseEntity<Void> update(@PathVariable Long id_Atributo, @RequestBody AtributoEgreso atributoAct){
         AtributoEgreso atributoAnt = atributoEgresoRepository.findById(id_Atributo).get();
         if(atributoAnt != null){
-            atributoAct.setId_Atributo(atributoAnt.getId_Atributo());
+            atributoAct.setIdAtributo(atributoAnt.getIdAtributo());
             atributoEgresoRepository.save(atributoAct);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id_Atributo}")
+    @DeleteMapping("/{idAtributo}")
     public ResponseEntity<Void> delete(@PathVariable Long id_Atributo){
         if(atributoEgresoRepository.findById(id_Atributo).get() != null){
             atributoEgresoRepository.deleteById(id_Atributo);

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import mx.tecnm.proyecto.proyectoAApi.Evaluacion.Evaluacion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,12 +16,12 @@ import java.util.List;
 public class Evaluador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_Evaluador;
+    private Long idEvaluador;
     @Column(nullable = false, length = 100)
     private String nombre_Evaluador;
     @Column(nullable = false, length = 50)
     private String materia;
 
-    @OneToMany(mappedBy = "evaluador")
-    private List<Evaluacion> evaluacion;
+    @OneToMany(mappedBy = "evaluador", cascade = CascadeType.ALL)
+    private List<Evaluacion> evaluacion =  new ArrayList<>();
 }

@@ -1,6 +1,6 @@
 package mx.tecnm.proyecto.proyectoAApi.Evaluacion;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +8,7 @@ import mx.tecnm.proyecto.proyectoAApi.DetalleEvaluacion.DetalleEvaluacion;
 import mx.tecnm.proyecto.proyectoAApi.Evaluador.Evaluador;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,26 +17,21 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name="evaluacion")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Evaluacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_Evaluacion;
+    private Long idEvaluacion;
     @Column(nullable = false)
     private Float calificacion;
     @Column(nullable = false, updatable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate fecha;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_Evaluador")
+    @JoinColumn(name = "idEvaluador")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Evaluador evaluador;
 
     @OneToMany(mappedBy = "evaluacion", cascade = CascadeType.ALL)
-    private List<DetalleEvaluacion> detalleEvaluacion;
-
-    @PrePersist
-    protected void onCreate() {
-        this.fecha = LocalDate.now();
-    }
+    private List<DetalleEvaluacion> detalleEvaluacion =  new ArrayList<>();
 }

@@ -8,6 +8,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@CrossOrigin(origins="http://localhost:5173")
 @RestController
 @RequestMapping("/evaluador")
 public class EvaluadorController {
@@ -18,9 +19,9 @@ public class EvaluadorController {
     public ResponseEntity<Iterable<Evaluador>> findAll() {
         return ResponseEntity.ok(evaluadorRepository.findAll());
     }
-    @GetMapping("/{id_Evaluador}")
-    public ResponseEntity<Evaluador> findById(@PathVariable Long id_Evaluador) {
-        Optional<Evaluador> evaluador0ptional = evaluadorRepository.findById(id_Evaluador);
+    @GetMapping("/{idEvaluador}")
+    public ResponseEntity<Evaluador> findById(@PathVariable Long idEvaluador) {
+        Optional<Evaluador> evaluador0ptional = evaluadorRepository.findById(idEvaluador);
         if (evaluador0ptional.isPresent()) {
             return ResponseEntity.ok(evaluador0ptional.get());
         } else {
@@ -31,25 +32,25 @@ public class EvaluadorController {
     public ResponseEntity<Void> create(@RequestBody Evaluador newEvaluador, UriComponentsBuilder ucb) {
         Evaluador savedEvaluador = evaluadorRepository.save(newEvaluador);
         URI uri = ucb
-                .path("evaluador/{id_Evaluador}")
-                .buildAndExpand(savedEvaluador.getId_Evaluador())
+                .path("evaluador/{idEvaluador}")
+                .buildAndExpand(savedEvaluador.getIdEvaluador())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
-    @PutMapping("/{id_Evaluador}")
-    public ResponseEntity<Void> update(@PathVariable Long id_Evaluador, @RequestBody Evaluador evaluadorAct) {
-        Evaluador evaluadorAnt = evaluadorRepository.findById(id_Evaluador).get();
+    @PutMapping("/{idEvaluador}")
+    public ResponseEntity<Void> update(@PathVariable Long idEvaluador, @RequestBody Evaluador evaluadorAct) {
+        Evaluador evaluadorAnt = evaluadorRepository.findById(idEvaluador).get();
         if (evaluadorAnt != null) {
-            evaluadorAct.setId_Evaluador(evaluadorAnt.getId_Evaluador());
+            evaluadorAct.setIdEvaluador(evaluadorAnt.getIdEvaluador());
             evaluadorRepository.save(evaluadorAct);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
-    @DeleteMapping("/{id_Evaluador}")
-    public ResponseEntity<Void> delete(@PathVariable Long id_Evaluador) {
-        if (evaluadorRepository.findById(id_Evaluador).get() != null) {
-            evaluadorRepository.deleteById(id_Evaluador);
+    @DeleteMapping("/{idEvaluador}")
+    public ResponseEntity<Void> delete(@PathVariable Long idEvaluador) {
+        if (evaluadorRepository.findById(idEvaluador).get() != null) {
+            evaluadorRepository.deleteById(idEvaluador);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

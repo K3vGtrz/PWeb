@@ -10,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@CrossOrigin(origins="http://localhost:5173")
 @RestController
 @RequestMapping("/evaluacion")
 public class EvaluacionController {
@@ -23,9 +24,9 @@ public class EvaluacionController {
         return ResponseEntity.ok(evaluacionRepository.findAll());
     }
 
-    @GetMapping("/{id_Evaluacion}")
-    public ResponseEntity<Evaluacion> findById(@PathVariable Long id_Evaluacion) {
-        Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(id_Evaluacion);
+    @GetMapping("/{idEvaluacion}")
+    public ResponseEntity<Evaluacion> findById(@PathVariable Long idEvaluacion) {
+        Optional<Evaluacion> evaluacionOptional = evaluacionRepository.findById(idEvaluacion);
         if (evaluacionOptional.isPresent()) {
             return ResponseEntity.ok(evaluacionOptional.get());
         } else {
@@ -35,35 +36,35 @@ public class EvaluacionController {
 
     @PostMapping
     public ResponseEntity<Evaluacion> create(@RequestBody Evaluacion evaluacion, UriComponentsBuilder uriBuilder) {
-        Optional<Evaluador> evaluadorOptional = evaluadorRepository.findById(evaluacion.getEvaluador().getId_Evaluador());
+        Optional<Evaluador> evaluadorOptional = evaluadorRepository.findById(evaluacion.getEvaluador().getIdEvaluador());
         if (!evaluadorOptional.isPresent()) {
             return ResponseEntity.unprocessableEntity().build();
         }
         evaluacion.setEvaluador(evaluadorOptional.get());
         Evaluacion created = evaluacionRepository.save(evaluacion);
-        URI uri = uriBuilder.path("/evaluacion/{id_Evaluacion}").buildAndExpand(created.getId_Evaluacion()).toUri();
+        URI uri = uriBuilder.path("/evaluacion/{idEvaluacion}").buildAndExpand(created.getIdEvaluacion()).toUri();
         return ResponseEntity.created(uri).body(created);
     }
 
-    @PutMapping("/{id_Evaluacion}")
-    public ResponseEntity<Void> update(@PathVariable Long id_Evaluacion, @RequestBody Evaluacion evalucion) {
-        Optional<Evaluador> evaluadorOptional = evaluadorRepository.findById(evalucion.getEvaluador().getId_Evaluador());
+    @PutMapping("/{idEvaluacion}")
+    public ResponseEntity<Void> update(@PathVariable Long idEvaluacion, @RequestBody Evaluacion evalucion) {
+        Optional<Evaluador> evaluadorOptional = evaluadorRepository.findById(evalucion.getEvaluador().getIdEvaluador());
         if (!evaluadorOptional.isPresent()) {
             return ResponseEntity.unprocessableEntity().build();
         }
-        Evaluacion evaluacionAnterior = evaluacionRepository.findById(id_Evaluacion).get();
+        Evaluacion evaluacionAnterior = evaluacionRepository.findById(idEvaluacion).get();
         if (evaluacionAnterior != null) {
             evalucion.setEvaluador(evaluadorOptional.get());
-            evalucion.setId_Evaluacion(evaluacionAnterior.getId_Evaluacion());
+            evalucion.setIdEvaluacion(evaluacionAnterior.getIdEvaluacion());
             evaluacionRepository.save(evalucion);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
-    @DeleteMapping("/{id_Evaluacion}")
-    public ResponseEntity<Void> delete(@PathVariable Long id_Evaluacion) {
-        if (evaluacionRepository.findById(id_Evaluacion).isPresent()) {
-            evaluacionRepository.deleteById(id_Evaluacion);
+    @DeleteMapping("/{idEvaluacion}")
+    public ResponseEntity<Void> delete(@PathVariable Long idEvaluacion) {
+        if (evaluacionRepository.findById(idEvaluacion).isPresent()) {
+            evaluacionRepository.deleteById(idEvaluacion);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

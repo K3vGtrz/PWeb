@@ -8,6 +8,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/alumno")
 public class AlumnoController {
@@ -15,13 +16,13 @@ public class AlumnoController {
     private AlumnoRepository alumnoRepository;
 
     @GetMapping
-    public ResponseEntity<Iterable<Alumno>> findAll(){
+    public ResponseEntity<Iterable<Alumno>> findAll() {
         return ResponseEntity.ok(alumnoRepository.findAll());
     }
 
-    @GetMapping("/{numControl}")
-    public ResponseEntity<Alumno> findById(@PathVariable String numControl) {
-        Optional<Alumno> alumnoOptional = alumnoRepository.findById(numControl);
+    @GetMapping("/{idAlumno}")
+    public ResponseEntity<Alumno> findById(@PathVariable Long idAlumno) {
+        Optional<Alumno> alumnoOptional = alumnoRepository.findById(idAlumno);
         if (alumnoOptional.isPresent()) {
             return ResponseEntity.ok(alumnoOptional.get());
         } else {
@@ -30,30 +31,30 @@ public class AlumnoController {
     }
 
     @PostMapping
-    public ResponseEntity<Alumno> create(@RequestBody Alumno newAlumno, UriComponentsBuilder ucb){
+    public ResponseEntity<Alumno> create(@RequestBody Alumno newAlumno, UriComponentsBuilder ucb) {
         Alumno savedAlumno = alumnoRepository.save(newAlumno);
         URI uri = ucb
-                .path("/alumno/{numControl}")
+                .path("/alumno/{idAlumno}")
                 .buildAndExpand(savedAlumno.getNumControl())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping("/{numControl}")
-    public ResponseEntity<Void> update(@PathVariable String numControl, @RequestBody Alumno alumnoAct){
-        Alumno alumnoAnt = alumnoRepository.findById(numControl).get();
-        if(alumnoAnt != null){
+    @PutMapping("/{idAlumno}")
+    public ResponseEntity<Void> update(@PathVariable Long idAlumno, @RequestBody Alumno alumnoAct) {
+        Alumno alumnoAnt = alumnoRepository.findById(idAlumno).get();
+        if (alumnoAnt != null) {
             alumnoAct.setNumControl(alumnoAnt.getNumControl());
             alumnoRepository.save(alumnoAct);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{numControl}")
-    public ResponseEntity<Void> delete(@PathVariable String numControl){
-        if(alumnoRepository.findById(numControl).get() != null){
-            alumnoRepository.deleteById(numControl);
+    @DeleteMapping("/{idAlumno}")
+    public ResponseEntity<Void> delete(@PathVariable Long idAlumno) {
+        if (alumnoRepository.findById(idAlumno).get() != null) {
+            alumnoRepository.deleteById(idAlumno);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

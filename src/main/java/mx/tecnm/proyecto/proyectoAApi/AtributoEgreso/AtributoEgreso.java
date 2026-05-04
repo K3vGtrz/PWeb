@@ -1,10 +1,10 @@
 package mx.tecnm.proyecto.proyectoAApi.AtributoEgreso;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import mx.tecnm.proyecto.proyectoAApi.AtributoEvaluar.AtributoEvaluar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,11 +13,10 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "atributoEgreso")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AtributoEgreso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_Atributo;
+    private Long idAtributo;
     @Column(nullable = false, length = 80)
     private String tipo_Atributo;
     @Column(nullable = false, length = 200)
@@ -25,6 +24,6 @@ public class AtributoEgreso {
     @Column(nullable = false)
     private Float ponderacion;
 
-    @OneToMany(mappedBy = "atributoEgreso")
-    private List<AtributoEvaluar> atributoEvaluar;
+    @OneToMany(mappedBy = "atributoEgreso", cascade = CascadeType.ALL)
+    private List<AtributoEvaluar> atributoEvaluar = new ArrayList<>();
 }
